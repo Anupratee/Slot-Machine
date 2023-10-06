@@ -27,7 +27,7 @@ const SYMBOL_VALUES = {
     "D": 2
 }
 
-//STEP ONE
+//STEP ONE: DEPOSIT AMOUNT
 const deposit = () => {
     while (true) {
         const depositAmount = promt("Enter a deposit amount: ");
@@ -42,7 +42,7 @@ const deposit = () => {
     }
 };
 
-//STEP TWO
+//STEP TWO: GET NUMBER OF LINES TO BET ON
 const getNumberOfLines = () => {
     while (true) {
         const lines = promt("Enter the number of lines to bet on (1-3): ");
@@ -57,7 +57,7 @@ const getNumberOfLines = () => {
     }
 };
 
-//STEP THREE
+//STEP THREE: GET THE BET AMOUNT
 const getBet = (balance, numberOfLines) => {
     while (true) {
         const bet = promt("Enter the bet per line: ");
@@ -72,7 +72,7 @@ const getBet = (balance, numberOfLines) => {
     }
 };
 
-//STEP FOUR
+//STEP FOUR: SPIN THE SLOT MACHINE
 const spin = () => {
     const symbols = []; //an array is a reference data type
     for (const[symbol, count] of Object.entries(SYMBOLS_COUNT)){
@@ -95,10 +95,62 @@ const spin = () => {
     return reels;
 };
 
+//STEP FIVE: CHECK WINNINGS
+const transpose = (reels) => {
+    const rows = [];
+    
+    for (let i = 0; i <ROWS; i ++) {
+        rows.push([]);
+        for (let j = 0; j < COLS; j++) {
+            rows[i].push(reels[j][i])
+        }
+    }
+    return rows
+};
+
+const printRows = (rows) => {
+    for (const row of rows) {
+        let rowString = "";
+        for (const [i, symbol] of row.entries()) {
+            rowString += symbol;
+            if (i != rows.lenght - 1) {
+                rowString += " | ";
+            }
+        } 
+        console.log(rowString);
+    }
+};
+
+const getWinnings = (rows, bet, lines) => {
+    let winnings = 0;
+    
+    for (let row = 0; row < lines; row++) {
+        const symbols = rows[row];
+        let allSame = true;
+
+        for (const symbol of symbols) {
+            if (symbol != symbols[0]) {
+                allSame = false;
+                break;
+            }
+        }
+
+        if (allSame) {
+            winnings += bet * SYMBOL_VALUES[symbols[0]];
+
+        }
+    }
+    return winnings;
+};
+
+
+let balance = deposit(); //let makes it variable value //starting balance is the amount deposited
+const numberOfLines = getNumberOfLines(); //const makes it a constant value
+const bet = getBet(balance, numberOfLines);
 const reels = spin();
-console.log(reels);
-//let balance = deposit(); //let makes it variable value //starting balance is the amount deposited
-//const numberOfLines = getNumberOfLines(); //const makes it a constant value
-//const bet = getBet(balance, numberOfLines);
+const rows = transpose(reels);
+printRows(rows);
+const winnings = getWinnings(rows, bet, numberOfLines);
+console.log("You won, ₹" + winnings.toString());
 
 
