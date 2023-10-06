@@ -9,6 +9,24 @@
 
 const promt = require("prompt-sync")(); //import statement, extra parentheses gives you access to a function
 
+//global variables in caps
+const ROWS = 3;
+const COLS = 3;
+
+const SYMBOLS_COUNT = {
+    "A": 2,
+    "B": 4,
+    "C": 6,
+    "D": 8
+}
+
+const SYMBOL_VALUES = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 2
+}
+
 //STEP ONE
 const deposit = () => {
     while (true) {
@@ -54,8 +72,33 @@ const getBet = (balance, numberOfLines) => {
     }
 };
 
-let balance = deposit(); //let makes it variable value //starting balance is the amount deposited
-const numberOfLines = getNumberOfLines(); //const makes it a constant value
-const bet = getBet(balance, numberOfLines);
+//STEP FOUR
+const spin = () => {
+    const symbols = []; //an array is a reference data type
+    for (const[symbol, count] of Object.entries(SYMBOLS_COUNT)){
+        for(let i = 0; i < count; i++) {
+            symbols.push(symbol);
+        }
+    }
+    const reels = [];
+    for (let i = 0; i < COLS; i++) {
+        reels.push([]);
+        const reelSymbols = [...symbols];
+        for (let j = 0; j < ROWS; j++) {
+            const randomIndex = Math.floor(Math.random() * reelSymbols.length);
+            const selectedSymbol = reelSymbols[randomIndex];
+            reels[i].push(selectedSymbol);
+            reelSymbols.splice(randomIndex, 1);    
+        }
+    }
+
+    return reels;
+};
+
+const reels = spin();
+console.log(reels);
+//let balance = deposit(); //let makes it variable value //starting balance is the amount deposited
+//const numberOfLines = getNumberOfLines(); //const makes it a constant value
+//const bet = getBet(balance, numberOfLines);
 
 
