@@ -49,7 +49,7 @@ const getNumberOfLines = () => {
         const numberOfLines = parseFloat(lines);
 
         //check validity of number, the two bars stand for OR
-        if (isNaN(numberOfLines) || numberOfLines <= 0 || numberOfLines > 3) {
+        if (isNaN(numberOfLines) || numberOfLines <= 0 || numberOfLines > ROWS) {
             console.log("Invalid number of lines, try again.");
         } else {
             return numberOfLines;
@@ -143,14 +143,32 @@ const getWinnings = (rows, bet, lines) => {
     return winnings;
 };
 
+//STEP SIX & SEVEN: GIVE WINNINGS AND ASK IF THEY WANT TO PLAY AGAIN
+const game = () => {
+    let balance = deposit(); //let makes it variable value //starting balance is the amount deposited
 
-let balance = deposit(); //let makes it variable value //starting balance is the amount deposited
-const numberOfLines = getNumberOfLines(); //const makes it a constant value
-const bet = getBet(balance, numberOfLines);
-const reels = spin();
-const rows = transpose(reels);
-printRows(rows);
-const winnings = getWinnings(rows, bet, numberOfLines);
-console.log("You won, ₹" + winnings.toString());
+    while (true) {
+        console.log("You have a balance of ₹" + balance);
+        const numberOfLines = getNumberOfLines(); //const makes it a constant value
+        const bet = getBet(balance, numberOfLines);
+        balance -= bet * numberOfLines;
+        const reels = spin();
+        const rows = transpose(reels);
+        printRows(rows);
+        const winnings = getWinnings(rows, bet, numberOfLines);
+        balance += winnings;
+        console.log("You won, ₹" + winnings.toString());
+        console.log("You have a balance of ₹" + balance);
+        if (balance <= 0) {
+            console.log("Insufficient balance");
+            break;
+        } 
 
+        const playAgain = promt("Do you want to play again (y/n)");
+        if (playAgain != "y") {
+            break;
+        }
+    };
+};
 
+game();
