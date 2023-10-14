@@ -83,7 +83,7 @@ const spin = () => {
     const reels = [];
     for (let i = 0; i < COLS; i++) {
         reels.push([]);
-        const reelSymbols = [...symbols];
+        const reelSymbols = [...symbols]; //spreading operator
         for (let j = 0; j < ROWS; j++) {
             const randomIndex = Math.floor(Math.random() * reelSymbols.length);
             const selectedSymbol = reelSymbols[randomIndex];
